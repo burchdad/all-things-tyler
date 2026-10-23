@@ -11,3 +11,6 @@ test('unknown search has empty result and category search intersects',()=>{asser
 test('schema rejects missing references, cycles, invalid tiers, duplicates and live data',()=>{for(const mutate of [(d:any)=>d.categories[0].parents=['floral'],(d:any)=>d.categories[3].parents=['missing'],(d:any)=>d.businesses[0].tier='Gold',(d:any)=>d.businesses[0].categoryIds=['missing'],(d:any)=>d.businesses[0].provenance.kind='live',(d:any)=>d.businesses.push(d.businesses[0])]){const d=structuredClone(data);mutate(d);assert.throws(()=>validate(d));}assert.equal(validate(data),data);});
 
 test('handoff overflowing toilet intent resolves only fictional emergency plumbing record',()=>{assert.deepEqual(results(data,{...state,query:'my toilet is overflowing! help!'}).map(b=>b.id),['demo-03']);});
+
+test('twelve source-observed broad labels retain fictional listing provenance',()=>{assert.equal(data.categories.filter(c=>c.level===1).length,12);assert(data.businesses.every(b=>b.provenance.kind==='fictional'));});
+test('shared URLs explicitly restore the directory view',()=>{assert.equal(new URLSearchParams(serialize(state)).get('view'),'directory');});
