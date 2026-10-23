@@ -1,0 +1,1 @@
+{"name":"all-things-tyler-local-preview","version":"0.1.0","private":true,"type":"module","engines":{"node":">=24"},"scripts":{"build":"node build.mjs","test":"node --test tests/*.test.ts","preview":"node server.mjs"}}
