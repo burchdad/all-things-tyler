@@ -17,8 +17,8 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 ## Demonstrated behavior
 
 - Three category levels with multiple parents; selected-level results include directly assigned businesses and descendants without duplicate cards.
-- BronzePlus before Bronze. Deterministic seeded order within each tier; explicit Refresh order changes the seed. Browsing, reload, search, and share links preserve it.
-- Back retraces the chosen category path. Clear resets query, category, listing, and path while retaining the seed.
+- BronzePlus before Bronze. Deterministic seeded order within each tier; every new logical results visit, submitted search (including repeat queries), category selection, category Back, Start Over, and Refresh order generates a new seed. Merely typing or rerendering does not. Reload, browser history, listing open/return, and copied URLs restore the existing seed. This is the preview interpretation of “shuffle each time,” not a continuous animation.
+- Back retraces the chosen category path. Start Over resets query, category, listing, and path and generates a new seed.
 - Query URLs restore filtered results or a single fictional listing. Invalid category/listing IDs and paths are rejected.
 - Deterministic intent matching through synonyms and descriptive keywords, not general AI. Try “my toilet is overflowing! help!”, “my air conditioner needs fixing”, “flowers”, or “coffee”. Every remaining normalized term must match; cards explain normalized terms.
 - Semantic form controls, keyboard focus styles, skip link, live result counts, and responsive layouts.
@@ -29,7 +29,7 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 
 ## Verification and limits
 
-Twelve rule tests pass, and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
+Eighteen rule tests pass, and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
 
 ## Decisions before production integration
 
@@ -44,3 +44,13 @@ Public Squarespace image URLs are referenced directly, not private assets. Typog
 Reproduced here: homepage hero, navigation, embedded review directory, community statement, and footer presentation. About Us, Contact, Events, Become a Partner, member login, newsletter signup, legal pages, highlights and partner stories link to their original destinations. No account, payment or newsletter form is recreated. Community Corner was unavailable on inspection and is shown as unavailable, not fabricated. The original Facebook footer destination pointed to an unrelated business; this preview links to the verified official contact page instead. Original designer credit is explicitly attributed to the original site, not this new implementation.
 
 Reference: https://www.allthingstyler.com/ and https://directory.allthingstyler.com/ . Public imagery remains dependent on the original Squarespace CDN.
+
+## Original-note core behavior update
+
+Descriptive keywords are a BronzePlus search feature. Both tiers remain discoverable by ordinary name, description and associated category/ancestor terms. Only BronzePlus explicitly assigned keywords unlock `emergency services`, `color specialist`, and `curly hair specialist` concepts; accidental mention in a description does not confer eligibility. Three new fictional Plus fixtures and a Bronze salon comparison exercise this boundary. There is no claim of real emergency availability.
+
+Normalization handles case, punctuation, polite filler (including please), colour/color and colorist variants, curly-hair phrases, and the overflowing-toilet intent. The dictionary is bounded, not general AI; unknown requests can still return no matches. No typo correction, semantic model, paid API, location inference, or live availability check is implied.
+
+Ordering changes on explicit logical result actions as listed above, with BronzePlus always ahead of Bronze. A new seed is persisted to the URL so incidental renders, typing, history restoration, and shared links do not rearrange a viewed result. Random permutations can coincidentally repeat, especially in small tiers.
+
+Negated requests retain a blocking token rather than silently recommending the negated service. This conservative handling is not full grammatical negation understanding. The specific repair idiom “not working” is normalized to repair.

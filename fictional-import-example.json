@@ -106,6 +106,22 @@
       ]
     },
     {
+      "id": "beauty",
+      "name": "Hair & beauty",
+      "level": 2,
+      "parents": [
+        "health"
+      ]
+    },
+    {
+      "id": "hair",
+      "name": "Hair salons",
+      "level": 3,
+      "parents": [
+        "beauty"
+      ]
+    },
+    {
       "id": "hvac",
       "name": "Heating & cooling",
       "level": 3,
@@ -148,6 +164,69 @@
     }
   ],
   "businesses": [
+    {
+      "id": "demo-09",
+      "name": "Demo • Rapid Response Plumbing",
+      "tier": "BronzePlus",
+      "categoryIds": [
+        "plumbing"
+      ],
+      "description": "Fictional plumbing example for testing emergency search. No actual business, availability or emergency response is offered.",
+      "keywords": [
+        "emergency services",
+        "plumbing"
+      ],
+      "provenance": {
+        "kind": "fictional",
+        "source": "Hand-authored demonstration fixture; not a real business or actual emergency service"
+      }
+    },
+    {
+      "id": "demo-10",
+      "name": "Demo • Palette Hair Studio",
+      "tier": "BronzePlus",
+      "categoryIds": [
+        "hair"
+      ],
+      "description": "Fictional salon example for testing specialist search. No actual salon services are offered.",
+      "keywords": [
+        "color specialist"
+      ],
+      "provenance": {
+        "kind": "fictional",
+        "source": "Hand-authored demonstration fixture; not a real business"
+      }
+    },
+    {
+      "id": "demo-11",
+      "name": "Demo • Curl Study Salon",
+      "tier": "BronzePlus",
+      "categoryIds": [
+        "hair"
+      ],
+      "description": "Fictional salon example for testing specialist search. No actual salon services are offered.",
+      "keywords": [
+        "curly hair specialist"
+      ],
+      "provenance": {
+        "kind": "fictional",
+        "source": "Hand-authored demonstration fixture; not a real business"
+      }
+    },
+    {
+      "id": "demo-12",
+      "name": "Demo • Everyday Salon",
+      "tier": "Bronze",
+      "categoryIds": [
+        "hair"
+      ],
+      "description": "Fictional salon listing for ordinary name and category search.",
+      "keywords": [],
+      "provenance": {
+        "kind": "fictional",
+        "source": "Hand-authored demonstration fixture; not a real business"
+      }
+    },
     {
       "id": "demo-01",
       "name": "Demo • Pine & Petal",
@@ -196,8 +275,7 @@
       "keywords": [
         "repair",
         "hvac",
-        "plumbing",
-        "emergency"
+        "plumbing"
       ],
       "provenance": {
         "kind": "fictional",
