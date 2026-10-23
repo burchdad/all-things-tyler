@@ -29,7 +29,7 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 
 ## Verification and limits
 
-Ten rule tests pass, and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Browser execution was unavailable in the preparation environment, so visual, mobile, screen-reader, and keyboard behavior still require review. No production readiness claim.
+Ten rule tests pass, and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
 
 ## Decisions before production integration
 
