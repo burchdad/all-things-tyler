@@ -1,4 +1,4 @@
-# All Things Tyler directory demonstration
+# All Things Tyler website and directory review
 
 Review-only directory concept using conspicuously fictional businesses. Not the live All Things Tyler website or membership system. No real business details, private member data, credentials, payments, contact forms, messaging, or external AI services.
 
@@ -34,3 +34,13 @@ Ten rule tests pass, and build, JavaScript syntax, import validation, and local 
 ## Decisions before production integration
 
 Confirm authoritative category/business/tier/keyword data, the existing application's integration target and legacy URL migration, listing fields, brand assets, shuffle trigger, keyword ranking expectations, expected results for representative queries, and permitted publishing scope. Current ordering and navigation behavior are provisional review defaults. No fourth hierarchy level, mobile app, SMS, or Facebook automation is included.
+
+## Original-site visual reconstruction
+
+Homepage/header/footer are reconstructed from public All Things Tyler pages inspected October 23, 2026. The original navy (#113559), cream (#faf7ef), coral (#ef3937), public logo, downtown hero photograph and original sponsor image are referenced. The embedded directory follows the existing subdomain's navy masthead, rounded category tiles, and public set of twelve broad category labels. Directory businesses, tiers, keyword eligibility, and lower-level associations remain explicitly fictional.
+
+Public Squarespace image URLs are referenced directly, not private assets. Typography uses Georgia/Arial fallbacks rather than copying licensed IvyPresto/Degular font files. This is not a pixel-identical font reproduction or a complete site migration.
+
+Reproduced here: homepage hero, navigation, embedded review directory, community statement, and footer presentation. About Us, Contact, Events, Become a Partner, member login, newsletter signup, legal pages, highlights and partner stories link to their original destinations. No account, payment or newsletter form is recreated. Community Corner was unavailable on inspection and is shown as unavailable, not fabricated. The original Facebook footer destination pointed to an unrelated business; this preview links to the verified official contact page instead. Original designer credit is explicitly attributed to the original site, not this new implementation.
+
+Reference: https://www.allthingstyler.com/ and https://directory.allthingstyler.com/ . Public imagery remains dependent on the original Squarespace CDN.

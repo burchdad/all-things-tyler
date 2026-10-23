@@ -2,19 +2,73 @@
   "categories": [
     {
       "id": "home",
-      "name": "Home & garden",
+      "name": "Home",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "realestate",
+      "name": "Homes & Real Estate",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "professional",
+      "name": "Professional",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "health",
+      "name": "Health, Beauty & Wellness",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "family",
+      "name": "Family & Education",
       "level": 1,
       "parents": []
     },
     {
       "id": "food",
-      "name": "Food & drink",
+      "name": "Food & Drink",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "automotive",
+      "name": "Automotive",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "transport",
+      "name": "Transportation & Lodging",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "pets",
+      "name": "Pets",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "media",
+      "name": "Photography & Media",
       "level": 1,
       "parents": []
     },
     {
       "id": "occasions",
-      "name": "Special occasions",
+      "name": "Events",
+      "level": 1,
+      "parents": []
+    },
+    {
+      "id": "retail",
+      "name": "Retail, Specialty & Supply",
       "level": 1,
       "parents": []
     },
