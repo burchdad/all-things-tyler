@@ -29,7 +29,7 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 
 ## Verification and limits
 
-Eighteen rule tests pass, and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
+Twenty tests pass (18 core behavior tests and 2 static accessibility markup/wiring assertions), and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
 
 ## Decisions before production integration
 
@@ -54,3 +54,5 @@ Normalization handles case, punctuation, polite filler (including please), colou
 Ordering changes on explicit logical result actions as listed above, with BronzePlus always ahead of Bronze. A new seed is persisted to the URL so incidental renders, typing, history restoration, and shared links do not rearrange a viewed result. Random permutations can coincidentally repeat, especially in small tiers.
 
 Negated requests retain a blocking token rather than silently recommending the negated service. This conservative handling is not full grammatical negation understanding. The specific repair idiom “not working” is normalized to repair.
+
+Keyboard QA found and corrected lost focus after category rerender: category selection, Back and Start Over now focus the category path. Repeated listing action links include business names in their accessible labels. Narrow-width and actual screen-reader testing remain unverified; responsive CSS inspection is not device testing.
