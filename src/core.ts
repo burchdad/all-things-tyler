@@ -1,11 +1,11 @@
-export type Category={id:string;name:string;level:1|2|3;parents:string[]};
+export type Category={id:string;name:string;level:1|2|3|4;parents:string[]};
 export type Business={id:string;name:string;tier:'BronzePlus'|'Bronze';categoryIds:string[];description:string;keywords:string[];provenance:{kind:'fictional';source:string}};
 export type Dataset={categories:Category[];businesses:Business[]};
 export type State={category:string;query:string;seed:string;listing:string;path:string[]};
 export function validate(input:unknown):Dataset{
  if(!input||typeof input!=='object')throw Error('Expected dataset object');
  const d=input as Dataset;if(!Array.isArray(d.categories)||!Array.isArray(d.businesses))throw Error('categories and businesses must be arrays');
- const ids=new Set<string>();for(const c of d.categories){if(!c||typeof c.id!=='string'||!/^[-a-z0-9]+$/.test(c.id)||ids.has(c.id)||typeof c.name!=='string'||!c.name.trim()||![1,2,3].includes(c.level)||!Array.isArray(c.parents)||new Set(c.parents).size!==c.parents.length)throw Error('Invalid or duplicate category');ids.add(c.id);}
+ const ids=new Set<string>();for(const c of d.categories){if(!c||typeof c.id!=='string'||!/^[-a-z0-9]+$/.test(c.id)||ids.has(c.id)||typeof c.name!=='string'||!c.name.trim()||![1,2,3,4].includes(c.level)||!Array.isArray(c.parents)||new Set(c.parents).size!==c.parents.length)throw Error('Invalid or duplicate category');ids.add(c.id);}
  const cats=new Map(d.categories.map(c=>[c.id,c]));for(const c of d.categories){if(c.level===1?c.parents.length!==0:c.parents.length===0)throw Error('Invalid parent count');for(const p of c.parents)if(cats.get(p)?.level!==c.level-1)throw Error('Parents must exist at previous level');}
  const bids=new Set<string>();for(const b of d.businesses){if(!b||typeof b.id!=='string'||!/^[-a-z0-9]+$/.test(b.id)||bids.has(b.id)||typeof b.name!=='string'||!b.name.trim()||!['BronzePlus','Bronze'].includes(b.tier)||typeof b.description!=='string'||!Array.isArray(b.keywords)||b.keywords.some(k=>typeof k!=='string')||!Array.isArray(b.categoryIds)||!b.categoryIds.length||new Set(b.categoryIds).size!==b.categoryIds.length||b.categoryIds.some(id=>!ids.has(id))||b.provenance?.kind!=='fictional'||typeof b.provenance.source!=='string'||!b.provenance.source.trim())throw Error('Invalid business or missing fictional provenance');bids.add(b.id);}
  return d;
@@ -16,7 +16,7 @@ const synonyms:Record<string,string>={toilets:'plumbing',toilet:'plumbing',overf
 const stop=new Set(['am','a','an','the','i','my','our','we','need','needs','someone','to','for','with','is','are','in','tyler','help','me','find','and','working','please','pls','can','could','you','who','does','do','anyone','looking','near','nearby','some','service','services','now','right','has','have','that','this']);
 const descriptive=new Set(['emergency_service','color_specialist','curly_hair_specialist']);
 export function terms(s:string):string[]{
- const normalized=s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9_]+/g,' ').replace(/\bnot working\b/g,' repair ')
+ const normalized=s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9_]+/g,' ').replace(/\b(?:not working|isnt working|is not working|doesnt work|does not work|stopped working)\b/g,' repair ')
  .replace(/\b(?:curly|curled|curl)\s+hair(?:\s+(?:specialists?|experts?|styling|stylists?))?\b/g,' curly_hair_specialist ')
  .replace(/\b(?:hair\s+)?colou?r(?:ing)?\s+(?:specialists?|experts?)\b/g,' color_specialist ')
  .replace(/\b(?:specialists?|experts?)\s+(?:in\s+)?(?:hair\s+)?colou?r(?:ing)?\b/g,' color_specialist ');
@@ -25,8 +25,9 @@ export function terms(s:string):string[]{
 export function matchingTerms(d:Dataset,b:Business,query:string):string[]{
  const categoryNames=d.categories.filter(c=>b.categoryIds.some(id=>descendants(d.categories,c.id).has(id))).map(c=>c.name);
  const ordinary=terms([b.name,b.description,...categoryNames].join(' ')).filter(t=>!descriptive.has(t));
- const premium=b.tier==='BronzePlus'?terms(b.keywords.join(' ')):[];
- const available=new Set([...ordinary,...premium]);
+ // Explicitly assigned descriptive keywords apply to both membership tiers.
+ const assigned=terms(b.keywords.join(' '));
+ const available=new Set([...ordinary,...assigned]);
  return terms(query).filter(t=>available.has(t));
 }
 function hash(s:string):number{let n=2166136261;for(const c of s)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0;}

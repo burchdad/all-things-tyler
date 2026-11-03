@@ -16,7 +16,7 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 
 ## Demonstrated behavior
 
-- Three category levels with multiple parents; selected-level results include directly assigned businesses and descendants without duplicate cards.
+- Up to four category levels with multiple parents, including a clearly fictional specialty example; selected-level results include directly assigned businesses and descendants without duplicate cards.
 - BronzePlus before Bronze. Deterministic seeded order within each tier; every new logical results visit, submitted search (including repeat queries), category selection, category Back, Start Over, and Refresh order generates a new seed. Merely typing or rerendering does not. Reload, browser history, listing open/return, and copied URLs restore the existing seed. This is the preview interpretation of “shuffle each time,” not a continuous animation.
 - Back retraces the chosen category path. Start Over resets query, category, listing, and path and generates a new seed.
 - Query URLs restore filtered results or a single fictional listing. Invalid category/listing IDs and paths are rejected.
@@ -27,13 +27,13 @@ Open http://127.0.0.1:4173 locally. Vercel configuration builds the static `dist
 
 `src/core.ts` defines TypeScript types and runtime validation. `fictional-import-example.json` is a complete import example. Run `node validate-import.mjs fictional-import-example.json` for validation without writing data. Parent references must exist at the preceding level. Duplicate IDs, invalid tiers, unknown business/category references, and missing or non-fictional provenance are rejected. Production data must use a separately reviewed ingestion boundary; do not embed private member information in browser assets.
 
-## Verification and limits
+## Original verification and limits
 
-Twenty tests pass (18 core behavior tests and 2 static accessibility markup/wiring assertions), and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
+At the original review, twenty tests passed (18 core behavior tests and 2 static accessibility markup/wiring assertions), and build, JavaScript syntax, import validation, and local HTTP smoke checks pass. Build uses Node's TypeScript syntax stripping, not full static type checking. Local Chromium execution was unavailable. A supported cloud browser subsequently verified desktop rendering, category paths, Back/Clear, keyboard Enter search/listing activation, reload restoration, return/skip-link focus, and tier-safe seeded shuffle. Mobile viewport and screen-reader verification remain outstanding. No production readiness claim.
 
 ## Decisions before production integration
 
-Confirm authoritative category/business/tier/keyword data, the existing application's integration target and legacy URL migration, listing fields, brand assets, shuffle trigger, keyword ranking expectations, expected results for representative queries, and permitted publishing scope. Current ordering and navigation behavior are provisional review defaults. No fourth hierarchy level, mobile app, SMS, or Facebook automation is included.
+Confirm authoritative category/business/tier/keyword data, the existing application's integration target and legacy URL migration, listing fields, brand assets, shuffle trigger, keyword ranking expectations, expected results for representative queries, and permitted publishing scope. Current ordering and navigation behavior are provisional review defaults. An optional fourth hierarchy level is supported by synthetic tests and a fictional display example; approved real taxonomy, mobile app, SMS, and Facebook automation are not included.
 
 ## Original-site visual reconstruction
 
@@ -47,7 +47,7 @@ Reference: https://www.allthingstyler.com/ and https://directory.allthingstyler.
 
 ## Original-note core behavior update
 
-Descriptive keywords are a BronzePlus search feature. Both tiers remain discoverable by ordinary name, description and associated category/ancestor terms. Only BronzePlus explicitly assigned keywords unlock `emergency services`, `color specialist`, and `curly hair specialist` concepts; accidental mention in a description does not confer eligibility. Three new fictional Plus fixtures and a Bronze salon comparison exercise this boundary. There is no claim of real emergency availability.
+Assigned descriptive keywords are searchable for both Bronze and BronzePlus. Both tiers remain discoverable by ordinary name, description and associated category/ancestor terms. Explicitly assigned keywords unlock `emergency services`, `color specialist`, and `curly hair specialist` concepts; accidental mention in a description does not confer eligibility. Three new fictional Plus fixtures and a Bronze salon comparison exercise this boundary. There is no claim of real emergency availability.
 
 Normalization handles case, punctuation, polite filler (including please), colour/color and colorist variants, curly-hair phrases, and the overflowing-toilet intent. The dictionary is bounded, not general AI; unknown requests can still return no matches. No typo correction, semantic model, paid API, location inference, or live availability check is implied.
 
@@ -56,3 +56,27 @@ Ordering changes on explicit logical result actions as listed above, with Bronze
 Negated requests retain a blocking token rather than silently recommending the negated service. This conservative handling is not full grammatical negation understanding. The specific repair idiom “not working” is normalized to repair.
 
 Keyboard QA found and corrected lost focus after category rerender: category selection, Back and Start Over now focus the category path. Repeated listing action links include business names in their accessible labels. Narrow-width and actual screen-reader testing remain unverified; responsive CSS inspection is not device testing.
+
+## November 3 search/cascade update
+
+The current review behavior uses step-by-step filters with relevant businesses
+at each step and keyword search across all businesses. This change removes the prior Plus-only keyword restriction, retains
+Plus-before-Bronze display ordering, and supports an optional fourth category level.
+The existing browser navigation already follows direct children and shows businesses
+at the selected node and every descendant. A broad-only listing is not shown as a
+specialist without an explicit association. No real category relationships were added.
+
+Common equipment-repair phrases now include “isn't working,” “does not work,” and
+“stopped working.” The search help explains its limited dictionary and both-tier
+coverage. Unknown terms still require a match and can yield no results. It is not
+general semantic/AI search, typo correction, live availability or location inference.
+
+Search remains scoped by a selected category; starting over or using the existing
+example-query buttons clears the category. Whether every submitted
+search should ignore the selected category remains a product question. The interpretation
+of “smart search” also needs examples of expected queries/results before any broader
+semantic feature, external service, or member-data transmission is introduced.
+
+21 core tests and 2 static accessibility tests pass, build passes, fictional import
+validates, generated JavaScript passes syntax checks, and strict TypeScript checking
+passes. Hosted browser/device QA is tracked separately. The existing noindex and fictional-data boundary are unchanged.
