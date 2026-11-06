@@ -80,3 +80,13 @@ semantic feature, external service, or member-data transmission is introduced.
 21 core tests and 2 static accessibility tests pass, build passes, fictional import
 validates, generated JavaScript passes syntax checks, and strict TypeScript checking
 passes. Hosted browser/device QA is tracked separately. The existing noindex and fictional-data boundary are unchanged.
+
+## Sarah feedback update — November 6, 2026
+
+Removed membership labels from cards, listing details and ordering copy, plus keyword/matched-term diagnostics. Tier data, tier precedence, all-tier keyword search and four-level cascading navigation remain intact.
+
+Added conspicuously fictional pet-sitting and logo-apparel fixtures. Query-only phrase normalization supports Sarah's three exact examples (overflowing toilet, sitting a dog while out of town, logo shirts ASAP). Timing is not treated as verified availability; search displays an explicit warning. Unknown constraints and missing directory entries still produce no matches. This is bounded deterministic matching, not a general conversational AI system.
+
+Verification: 27 unit/static tests, build, generated JavaScript syntax and import-example validation pass. Chromium browser execution was attempted but failed at launch because the environment disallowed its socket. No mobile or screen-reader pass is claimed from these checks.
+
+Google ratings remain absent. Real business identity/Place IDs and an authorized Google Places integration are prerequisites; fictional businesses must never receive invented Google ratings. The official Places policy requires appropriate Google attribution for display without a map, public Terms/Privacy disclosures and compliance with content storage restrictions (Place IDs have separate exceptions). Implementation must fetch permitted fields under the applicable billing/terms and gracefully omit unavailable ratings. No credentials, billing services or legal changes were created in this update. Reference checked November 6, 2026: https://developers.google.com/maps/documentation/places/web-service/policies .

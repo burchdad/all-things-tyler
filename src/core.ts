@@ -22,16 +22,33 @@ export function terms(s:string):string[]{
  .replace(/\b(?:specialists?|experts?)\s+(?:in\s+)?(?:hair\s+)?colou?r(?:ing)?\b/g,' color_specialist ');
  return [...new Set(normalized.split(/\s+/).filter(w=>w&&!stop.has(w)).map(w=>synonyms[w]||w))];
 }
+// Query-only context handling: never turn requested timing into verified availability.
+export function searchTerms(query:string):string[]{
+ let q=query.normalize('NFKD').replace(/[’']/g,'').toLowerCase().replace(/[^a-z0-9_]+/g,' ');
+ const pet=/\b(?:dog|dogs|pet|pets)\b/.test(q)&&/\b(?:sit|sitter|sitting|watch|care)\b/.test(q);
+ const apparel=/\b(?:shirts?|t shirts?|apparel)\b/.test(q)&&/\b(?:logo|logos|custom|printed|printing|embroidered|embroidery)\b/.test(q);
+ if(pet){
+  q=q.replace(/\b(?:were|we are|im|i am) going out of town\b/g,' ').replace(/\bwhile (?:were|we are|im|i am) (?:gone|away)\b/g,' ').replace(/\b(?:while away|out of town|on vacation)\b/g,' ')
+   .replace(/\b(?:sit|watch|care for) (?:our |my |the )?(?:dogs?|pets?)\b/g,' pet_sitting ').replace(/\b(?:dogs?|pets?) (?:sitters?|sitting|care)\b/g,' pet_sitting ');
+ }
+ if(apparel){q=q.replace(/\b(?:(?:t )?shirts?|apparel)\b/g,' custom_apparel ').replace(/\b(?:logos?|made|w|custom|printed|printing|embroidered|embroidery|apparel)\b/g,' ');}
+ if(pet||apparel)q=q.replace(/\b(?:asap|urgent|urgently|rush|today|tomorrow|immediately)\b/g,' ');
+ return terms(q);
+}
+export function searchNotice(query:string):string{
+ const timing=/\b(?:asap|urgent|urgently|rush|today|tomorrow|immediately|overflowing|emergency|away|gone)\b/i.test(query);
+ return timing?'Any results below match service type only. Availability, response times and rush turnaround are not verified.':'Matches are limited to fictional listings in this directory; this is not a complete local directory.';
+}
 export function matchingTerms(d:Dataset,b:Business,query:string):string[]{
  const categoryNames=d.categories.filter(c=>b.categoryIds.some(id=>descendants(d.categories,c.id).has(id))).map(c=>c.name);
  const ordinary=terms([b.name,b.description,...categoryNames].join(' ')).filter(t=>!descriptive.has(t));
  // Explicitly assigned descriptive keywords apply to both membership tiers.
  const assigned=terms(b.keywords.join(' '));
  const available=new Set([...ordinary,...assigned]);
- return terms(query).filter(t=>available.has(t));
+ return searchTerms(query).filter(t=>available.has(t));
 }
 function hash(s:string):number{let n=2166136261;for(const c of s)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0;}
-export function results(d:Dataset,state:State):Business[]{const allowed=state.category?descendants(d.categories,state.category):null;const q=terms(state.query);return d.businesses.filter(b=>(!allowed||b.categoryIds.some(id=>allowed.has(id)))&&matchingTerms(d,b,state.query).length===q.length).sort((a,b)=>(a.tier===b.tier?0:a.tier==='BronzePlus'?-1:1)||(hash(state.seed+':'+a.id)-hash(state.seed+':'+b.id))||a.id.localeCompare(b.id));}
+export function results(d:Dataset,state:State):Business[]{const allowed=state.category?descendants(d.categories,state.category):null;const q=searchTerms(state.query);return d.businesses.filter(b=>(!allowed||b.categoryIds.some(id=>allowed.has(id)))&&matchingTerms(d,b,state.query).length===q.length).sort((a,b)=>(a.tier===b.tier?0:a.tier==='BronzePlus'?-1:1)||(hash(state.seed+':'+a.id)-hash(state.seed+':'+b.id))||a.id.localeCompare(b.id));}
 export type ResultAction='visit'|'search'|'category'|'back'|'clear'|'refresh'|'render'|'typing'|'listing'|'return'|'history'|'share';
 export function applyShuffle(s:State,action:ResultAction,newSeed:()=>string):State{
  return ['visit','search','category','back','clear','refresh'].includes(action)?{...s,seed:newSeed()}:s;
