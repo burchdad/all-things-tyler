@@ -90,3 +90,17 @@ Added conspicuously fictional pet-sitting and logo-apparel fixtures. Query-only 
 Verification: 27 unit/static tests, build, generated JavaScript syntax and import-example validation pass. Chromium browser execution was attempted but failed at launch because the environment disallowed its socket. No mobile or screen-reader pass is claimed from these checks.
 
 Google ratings remain absent. Real business identity/Place IDs and an authorized Google Places integration are prerequisites; fictional businesses must never receive invented Google ratings. The official Places policy requires appropriate Google attribution for display without a map, public Terms/Privacy disclosures and compliance with content storage restrictions (Place IDs have separate exceptions). Implementation must fetch permitted fields under the applicable billing/terms and gracefully omit unavailable ratings. No credentials, billing services or legal changes were created in this update. Reference checked November 6, 2026: https://developers.google.com/maps/documentation/places/web-service/policies .
+
+## Local search revision — November 6, 2026
+
+This revision is prepared locally, not published. It retains fictional data, private-data isolation, tier precedence and seeded ordering. There is still no live AI model or external search service.
+
+- Generic conversational framing and plural normalization work across service/business vocabulary, rather than requiring a specific whole sentence. Explicit `or` alternatives form a union; ordinary `and` remains a strict match.
+- Misspellings and adjacent-letter swaps produce optional corrections derived from this dataset's names, categories, assigned keywords and applicable service aliases. Corrections are shown only if the revised query actually matches an existing listing. Ambiguous corrections and unknown substantive requirements are not silently guessed or discarded.
+- Category-conflict guidance can search all categories while preserving the query. Other refinements preserve the selected category unless the button explicitly says it will search all categories.
+- Vague questions ask for a service instead of returning everything. Exclusions are conservatively held for rewording. Timing queries show service candidates with an explicit unverified-hours/availability warning. Price/rating requests are not inferred; an optional button removes those requirements only when the user chooses it.
+- Negative description disclaimers no longer count as evidence that a business provides the named service. Cards still omit membership labels and keyword diagnostics.
+
+Verification: all 42 unit/static/DOM-fixture tests pass, including the 27 earlier regressions. Strict TypeScript checking of all source files, build, generated JavaScript syntax, import-example validation, whitespace checks and local HTTP checks for all six page/assets pass. The DOM fixture tests event/state/history wiring, not actual rendering. The cloud browser could not reach the local preview server, so rendered desktop/mobile and actual screen-reader QA for this revision remain unverified. No new deployment, billing, credentials or member-data import was performed.
+
+Google ratings readiness and licensing gates are documented in `GOOGLE_RATINGS_READINESS.md`.

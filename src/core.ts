@@ -13,18 +13,23 @@ export function validate(input:unknown):Dataset{
 export function descendants(categories:Category[],id:string):Set<string>{const out=new Set<string>([id]);let changed=true;while(changed){changed=false;for(const c of categories)if(!out.has(c.id)&&c.parents.some(p=>out.has(p))){out.add(c.id);changed=true;}}return out;}
 // Explicit reviewed dictionary: bounded deterministic matching, not general AI.
 const synonyms:Record<string,string>={toilets:'plumbing',toilet:'plumbing',overflowing:'emergency_service',overflow:'emergency_service',overflows:'emergency_service',emergencies:'emergency_service',emergency:'emergency_service',urgent:'emergency_service',urgently:'emergency_service',dont:'not',ac:'hvac',air:'hvac',conditioning:'hvac',cooling:'hvac',conditioner:'hvac',broken:'repair',fix:'repair',fixing:'repair',repairs:'repair',leak:'plumbing',leaking:'plumbing',pipes:'plumbing',plumber:'plumbing',plumbers:'plumbing',flowers:'floral',flower:'floral',bouquet:'floral',espresso:'coffee',yard:'landscaping',lawn:'landscaping',colour:'color',colorist:'color_specialist',colourist:'color_specialist'};
+export const searchAliases=Object.keys(synonyms);
 const stop=new Set(['am','a','an','the','i','my','our','we','need','needs','someone','to','for','with','is','are','in','tyler','help','me','find','and','working','please','pls','can','could','you','who','does','do','anyone','looking','near','nearby','some','service','services','now','right','has','have','that','this']);
 const descriptive=new Set(['emergency_service','color_specialist','curly_hair_specialist']);
+export function normalizeText(s:string):string{return s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'').replace(/\ba\s*\/\s*c\b/g,' ac ').replace(/[^a-z0-9_]+/g,' ').trim();}
+function canonicalWord(word:string):string{const singular=word.length>5&&word.endsWith('ies')?word.slice(0,-3)+'y':/(?:sses|ches|shes|xes|zes)$/.test(word)?word.slice(0,-2):word.length>4&&word.endsWith('s')&&!/(?:ss|us|is)$/.test(word)?word.slice(0,-1):word;return synonyms[word]||synonyms[singular]||singular;}
 export function terms(s:string):string[]{
- const normalized=s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9_]+/g,' ').replace(/\b(?:not working|isnt working|is not working|doesnt work|does not work|stopped working)\b/g,' repair ')
+ const normalized=normalizeText(s).replace(/\b(?:not working|isnt working|is not working|doesnt work|does not work|stopped working)\b/g,' repair ')
  .replace(/\b(?:curly|curled|curl)\s+hair(?:\s+(?:specialists?|experts?|styling|stylists?))?\b/g,' curly_hair_specialist ')
  .replace(/\b(?:hair\s+)?colou?r(?:ing)?\s+(?:specialists?|experts?)\b/g,' color_specialist ')
  .replace(/\b(?:specialists?|experts?)\s+(?:in\s+)?(?:hair\s+)?colou?r(?:ing)?\b/g,' color_specialist ');
- return [...new Set(normalized.split(/\s+/).filter(w=>w&&!stop.has(w)).map(w=>synonyms[w]||w))];
+ return [...new Set(normalized.split(/\s+/).filter(w=>w&&!stop.has(w)).map(canonicalWord))];
 }
+const conversational=new Set(['recommend','recommendation','suggest','suggestion','show','locate','search','want','would','like','place','somewhere','business','company','shop','get','got','any','thank','thanks','about','which','what','whats','where','it','its','was','were','im','ive','weve','id','there','around','local','of']);
+const timingPattern=/\b(?:open (?:right )?now|this (?:weekend|week|evening|morning|afternoon)|next (?:week|weekend)|today|tomorrow|tonight|asap|immediately)\b/g;
 // Query-only context handling: never turn requested timing into verified availability.
 export function searchTerms(query:string):string[]{
- let q=query.normalize('NFKD').replace(/[’']/g,'').toLowerCase().replace(/[^a-z0-9_]+/g,' ');
+ let q=normalizeText(query);
  const pet=/\b(?:dog|dogs|pet|pets)\b/.test(q)&&/\b(?:sit|sitter|sitting|watch|care)\b/.test(q);
  const apparel=/\b(?:shirts?|t shirts?|apparel)\b/.test(q)&&/\b(?:logo|logos|custom|printed|printing|embroidered|embroidery)\b/.test(q);
  if(pet){
@@ -32,23 +37,40 @@ export function searchTerms(query:string):string[]{
    .replace(/\b(?:sit|watch|care for) (?:our |my |the )?(?:dogs?|pets?)\b/g,' pet_sitting ').replace(/\b(?:dogs?|pets?) (?:sitters?|sitting|care)\b/g,' pet_sitting ');
  }
  if(apparel){q=q.replace(/\b(?:(?:t )?shirts?|apparel)\b/g,' custom_apparel ').replace(/\b(?:logos?|made|w|custom|printed|printing|embroidered|embroidery|apparel)\b/g,' ');}
- if(pet||apparel)q=q.replace(/\b(?:asap|urgent|urgently|rush|today|tomorrow|immediately)\b/g,' ');
- return terms(q);
+ if(pet||apparel||!/\b(?:plumb\w*|toilets?|pipes?|leaks?)\b/.test(q))q=q.replace(/\b(?:urgent|urgently|rush)\b/g,' ');
+ q=q.replace(timingPattern,' ');
+ return terms(q).filter(t=>!conversational.has(t));
 }
 export function searchNotice(query:string):string{
- const timing=/\b(?:asap|urgent|urgently|rush|today|tomorrow|immediately|overflowing|emergency|away|gone)\b/i.test(query);
- return timing?'Any results below match service type only. Availability, response times and rush turnaround are not verified.':'Matches are limited to fictional listings in this directory; this is not a complete local directory.';
+ const timing=/\b(?:open|asap|urgent|urgently|rush|today|tomorrow|tonight|immediately|week|weekend|overflowing|emergency|away|gone)\b/i.test(query);
+ return timing?'Any results below match service type only. Opening hours, availability, response times and rush turnaround are not verified.':'Matches are limited to fictional listings in this directory; this is not a complete local directory.';
+}
+export function availableTerms(d:Dataset,b:Business):Set<string>{
+ const categoryNames=d.categories.filter(c=>b.categoryIds.some(id=>descendants(d.categories,c.id).has(id))).map(c=>c.name);
+ // Negative/disclaimer text is not evidence that a business provides a service.
+ const positiveDescription=b.description.split(/\b(?:no|not|never|without)\b/i)[0];
+ const ordinary=terms([b.name,positiveDescription,...categoryNames].join(' ')).filter(t=>!descriptive.has(t));
+ return new Set([...ordinary,...terms(b.keywords.join(' '))]);
 }
 export function matchingTerms(d:Dataset,b:Business,query:string):string[]{
- const categoryNames=d.categories.filter(c=>b.categoryIds.some(id=>descendants(d.categories,c.id).has(id))).map(c=>c.name);
- const ordinary=terms([b.name,b.description,...categoryNames].join(' ')).filter(t=>!descriptive.has(t));
  // Explicitly assigned descriptive keywords apply to both membership tiers.
- const assigned=terms(b.keywords.join(' '));
- const available=new Set([...ordinary,...assigned]);
+ const available=availableTerms(d,b);
  return searchTerms(query).filter(t=>available.has(t));
 }
+export const hasNegation=(query:string)=>searchTerms(query).some(t=>['not','no','without','except','exclude','never'].includes(t));
+export function queryAlternatives(query:string):string[]{return normalizeText(query).split(/\bor\b/).map(q=>q.trim()).filter(Boolean);}
 function hash(s:string):number{let n=2166136261;for(const c of s)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0;}
-export function results(d:Dataset,state:State):Business[]{const allowed=state.category?descendants(d.categories,state.category):null;const q=searchTerms(state.query);return d.businesses.filter(b=>(!allowed||b.categoryIds.some(id=>allowed.has(id)))&&matchingTerms(d,b,state.query).length===q.length).sort((a,b)=>(a.tier===b.tier?0:a.tier==='BronzePlus'?-1:1)||(hash(state.seed+':'+a.id)-hash(state.seed+':'+b.id))||a.id.localeCompare(b.id));}
+export function results(d:Dataset,state:State):Business[]{
+ if(hasNegation(state.query))return [];
+ const allowed=state.category?descendants(d.categories,state.category):null;
+ const alternatives=queryAlternatives(state.query).map(searchTerms).filter(q=>q.length);
+ if(state.query.trim()&&!alternatives.length)return [];
+ return d.businesses.filter(b=>{
+  if(allowed&&!b.categoryIds.some(id=>allowed.has(id)))return false;
+  const available=availableTerms(d,b);
+  return !state.query.trim()||alternatives.some(q=>q.every(t=>available.has(t)));
+ }).sort((a,b)=>(a.tier===b.tier?0:a.tier==='BronzePlus'?-1:1)||(hash(state.seed+':'+a.id)-hash(state.seed+':'+b.id))||a.id.localeCompare(b.id));
+}
 export type ResultAction='visit'|'search'|'category'|'back'|'clear'|'refresh'|'render'|'typing'|'listing'|'return'|'history'|'share';
 export function applyShuffle(s:State,action:ResultAction,newSeed:()=>string):State{
  return ['visit','search','category','back','clear','refresh'].includes(action)?{...s,seed:newSeed()}:s;
