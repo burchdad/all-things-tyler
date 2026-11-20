@@ -22,10 +22,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "api/**/*.mjs": {
-      "runtime": "nodejs24.x"
-    }
-  }
+  ]
 }
