@@ -43,7 +43,7 @@ export function searchTerms(query:string):string[]{
 }
 export function searchNotice(query:string):string{
  const timing=/\b(?:open|asap|urgent|urgently|rush|today|tomorrow|tonight|immediately|week|weekend|overflowing|emergency|away|gone)\b/i.test(query);
- return timing?'Any results below match service type only. Opening hours, availability, response times and rush turnaround are not verified.':'Matches are limited to fictional listings in this directory; this is not a complete local directory.';
+ return timing?'Any results below match service type only. Opening hours, availability, response times and rush turnaround are not verified.':'Matches are limited to published member listings in the directory. Business hours, availability, service areas and credentials are not independently verified.';
 }
 export function availableTerms(d:Dataset,b:Business):Set<string>{
  const categoryNames=d.categories.filter(c=>b.categoryIds.some(id=>descendants(d.categories,c.id).has(id))).map(c=>c.name);
