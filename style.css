@@ -5,3 +5,22 @@
 .examples{flex-wrap:wrap}.examples button{min-height:32px}
 
 .search-options{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 20px}.search-options:empty{display:none}.search-options button{min-height:44px;max-width:100%;white-space:normal;text-align:left;padding:11px 15px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;line-height:1.4}#search-notice{line-height:1.55;max-width:80ch;overflow-wrap:anywhere}
+/* Sarah Jo November review refinements */
+#search-help{max-width:760px;margin:10px auto 0;color:#626c78;font-size:13px;line-height:1.6}
+.examples{justify-content:flex-start;margin:10px auto 22px;max-width:760px;flex-wrap:wrap}
+.examples button{background:#fff;border:1px solid #e5e1d8;border-radius:999px;padding:7px 13px;text-decoration:none;color:#193d64;min-height:36px}
+.step-tabs{display:flex;gap:10px;max-width:1010px;margin:0 auto 20px;padding:0 20px}
+.step-tab{display:inline-flex;align-items:center;gap:10px;padding:11px 17px;border:1px solid #e4e0d8;border-radius:999px;background:#fff;color:#526174;text-decoration:none;font-size:12px;font-weight:600}
+.step-tab span{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#f1eee7;color:#193d64;font-size:10px}
+.step-tab.active{background:#193d64;border-color:#193d64;color:#fff}.step-tab.active span{background:#fff;color:#193d64}
+.browse-heading{text-align:center;margin:18px auto 25px;max-width:700px}.browse-heading .eyebrow{font-size:9px;letter-spacing:2.3px;color:#8a806e;margin:0 0 7px}
+.browse-heading h2{font:500 34px Georgia,serif;color:#193d64;margin:0 0 8px}.browse-heading>p:last-child{font-size:13px;color:#737b85;margin:0}
+#categories{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.category{position:relative;min-height:94px;display:grid;grid-template-columns:42px 1fr 15px;align-items:center;gap:12px;text-align:left;padding:15px 16px;border:1px solid #e9e5de;border-radius:13px;background:linear-gradient(135deg,#fff,#fbfaf7);box-shadow:0 3px 12px #1b35500b;color:#24364a}
+.category:hover{transform:translateY(-2px);border-color:#d9cdbb;background:#fff;box-shadow:0 8px 20px #1b355016}
+.category .category-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#f4f0e8;color:#193d64;font:23px Georgia,serif}
+.category-copy{display:flex;flex-direction:column;gap:4px;min-width:0}.category-copy strong{font:600 15px Georgia,serif;line-height:1.2}.category-copy small{font:400 10px Arial,sans-serif;color:#737b85;line-height:1.35}.category-arrow{font-size:22px;color:#b6a98f;text-align:right}
+#cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid #e9e5de;border-radius:14px;box-shadow:0 5px 18px #1b35500b;padding:22px;background:#fff}.card .fiction{color:#9a8667!important;letter-spacing:1.3px}
+.card .tags span{background:#f4f1eb;color:#566579;border:1px solid #ebe5da;border-radius:999px;padding:6px 10px}.listing-link{font-weight:600}
+@media(max-width:760px){.step-tabs{padding:0 18px;gap:8px}.step-tab{flex:1;justify-content:center;padding:9px 10px;font-size:11px}#categories{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.category{min-height:88px;grid-template-columns:34px 1fr 10px;gap:8px;padding:11px 9px}.category .category-icon{width:33px;height:33px;font-size:19px}.category-copy strong{font-size:12px}.category-copy small{font-size:9px}.browse-heading h2{font-size:29px}#cards{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px}}
+@media(max-width:440px){#cards{grid-template-columns:1fr}.step-tab{gap:6px}.category{min-height:82px}.category-copy small{font-size:8px}}
