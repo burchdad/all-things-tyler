@@ -61,9 +61,6 @@ export default async function handler(req, res) {
       if (!['staged','approved','published','suspended'].includes(publication_status)) {
         return res.status(400).json({ error: 'A valid publication_status is required.' });
       }
-      if (typeof id !== 'string' || !['staged','approved','published','suspended'].includes(publication_status)) {
-        return res.status(400).json({ error: 'A listing id and valid publication_status are required.' });
-      }
       if (publication_status === 'published') {
         const rows = await sql`UPDATE business_listings SET publication_status='published', updated_at=now() WHERE id=${id}::uuid AND publication_status='approved' AND billing_status='source_method_present' RETURNING id, publication_status`;
         if (!rows.length) return res.status(409).json({ error: 'Publish requires prior approval and a billing method present in the source export. This does not independently verify payment.' });
