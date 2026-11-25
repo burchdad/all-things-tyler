@@ -3,7 +3,7 @@ import { timingSafeEqual } from 'node:crypto';
 
 function authorized(req) {
   const expected = process.env.ADMIN_API_TOKEN || '';
-  const supplied = (req.headers.authorization || '').replace(/^Bearer\\s+/i, '');
+  const supplied = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
   if (!expected || !supplied) return false;
   const a = Buffer.from(expected);
   const b = Buffer.from(supplied);
