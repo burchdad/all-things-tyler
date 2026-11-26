@@ -104,3 +104,20 @@ This revision is prepared locally, not published. It retains fictional data, pri
 Verification: all 42 unit/static/DOM-fixture tests pass, including the 27 earlier regressions. Strict TypeScript checking of all source files, build, generated JavaScript syntax, import-example validation, whitespace checks and local HTTP checks for all six page/assets pass. The DOM fixture tests event/state/history wiring, not actual rendering. The cloud browser could not reach the local preview server, so rendered desktop/mobile and actual screen-reader QA for this revision remain unverified. No new deployment, billing, credentials or member-data import was performed.
 
 Google ratings readiness and licensing gates are documented in `GOOGLE_RATINGS_READINESS.md`.
+
+
+## Database-backed member directory — November 20, 2026
+
+The real-member staging implementation uses a dedicated Neon PostgreSQL project and Vercel serverless functions. The static fictional fixtures remain in `src/data.ts` only as a fallback for local development; the browser app requests the published directory from `/api/directory`.
+
+- `api/directory.mjs`: public read-only API; returns only records with `publication_status='published'` and a source billing method present.
+- `api/admin/listings.mjs`: token-protected admin API for review, approval, publishing and suspension.
+- `admin.html`: private review dashboard. It requires the Vercel preview sign-in plus the admin API token.
+- `DATABASE_URL` and `ADMIN_API_TOKEN` are configured as encrypted/sensitive Vercel environment variables, not committed to source.
+- `db/migrations/001_initial_directory_schema.sql` documents the schema. RLS is enabled and no public table grants or policies are configured; database access is through server-side functions only.
+
+The November 20 CSV import staged 158 active member listings. Three cancelled/paused records were excluded. Seven active accounts have no Billing Method value and are marked `needs_review`. The other 151 have a Billing Method value in the export; this is not independent payment verification. All 158 remain `staged` and are hidden from the public endpoint until manually approved and published. No records were auto-published.
+
+The import preserves 319 distinct service/category labels, descriptions, business contact fields, logo/gallery URLs, and supplied social links. Street addresses are omitted wherever the source privacy flag says not to display them. Contact-person names, IP addresses, billing/customer IDs, account IDs, and internal-only fields were not imported. The public API omits unpublished records and applies the address privacy flag.
+
+Current limitations: the category tree is mapped into the existing broad directory taxonomy by a deterministic label heuristic and needs Sarah's review; Google ratings are not synthesized; membership billing, Facebook posting, recommendations moderation, event calendar access and booking workflows are not connected. The preview is not a production launch, and the source domain has not been switched.

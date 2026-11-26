@@ -57,3 +57,5 @@
 .tier-panel-plus{border-left:1px solid #e8ebee;padding-left:22px}
 .membership-footnote{font-size:10px;color:#77818f;line-height:1.6;margin:15px 0 0}
 @media(max-width:700px){.membership-comparison{padding:17px}.tier-columns,.profile-sections{grid-template-columns:1fr;gap:14px}.tier-panel-plus{border-left:0;border-top:1px solid #e8ebee;padding:15px 0 0}.membership-comparison h2{font-size:23px}#detail{padding:18px}.card-actions{align-items:stretch}.card-actions .listing-link{flex-basis:100%}}
+
+.listing-logo{width:58px;height:58px;object-fit:contain;border-radius:10px;background:#f4f5f6;border:1px solid #e7ebef;padding:4px}.profile-contact{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 20px;font-size:12px}.profile-contact a{color:#193d64;text-decoration:underline}
